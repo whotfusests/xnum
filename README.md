@@ -12,7 +12,7 @@ Encryption module for Python with /x64/ like encrypt lines and complete gibberis
 
 1.Using PIP
 ```bash
-pip install git+https://github.com/whotfusests/xnum.git
+pip install https://github.com/whotfusests/xnum/archive/main.zip
 ```
 
 2.Visual Installer (Requires Administrator) 
