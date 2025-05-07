@@ -25,7 +25,7 @@ pip install https://github.com/whotfusests/xnum/archive/main.zip
 import xnum
 
 xnum.genkey("yourkeyfile.key") # Use .key extension.
-# Output in keyfile: ���K�G٩�Ѓ^F�K�����p=^Zl���ߵ��@�
+# Output in keyfile: V@��i4<u�p���^U��Z^Qܢ0g����^N��V8�
 ```
 
 2.encrypt (Encrypt a string)
@@ -43,6 +43,13 @@ import xnum
 enc = xnum.encrypt("Hello!", "yourkeyfile.key", "gibbercipher")
 print(enc)
 # Output: w9J∭Ei
+# ---------------------------------------
+# MathSense Mode
+import xnum
+
+enc = xnum.encrypt("Hello!", "yourkeyfile.key", "mathsense")
+print(enc)
+# Output: ⊣⊡⍪⊵⊋≷
 ```
 
 3.decrypt (Decrypt a string)
@@ -58,6 +65,13 @@ print(dec)
 import xnum
 
 dec = xnum.decrypt("w9J∭Ei", "yourkeyfile.key", "gibbercipher")
+print(dec)
+# Output: Hello!
+# ---------------------------------------
+# MathSense Mode
+import xnum
+
+dec = xnum.decrypt("⊣⊡⍪⊵⊋≷", "yourkeyfile.key", "mathsense")
 print(dec)
 # Output: Hello!
 ```
