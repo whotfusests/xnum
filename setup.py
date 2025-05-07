@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="xnum",
-    version="2.0",
+    version="3.1.0",
     author="whotfusests",
     description="Encryption module for Python with /x64/ like encrypt lines and complete gibberish encryption.",
     long_description=long_description,
