@@ -1,6 +1,6 @@
 # xnum 🔐
 
-Encryption module for Python with /x64/ like encrypt lines and complete gibberish encryption.     
+Encryption module for Python with 4 different cipher modes.    
 ![GitHub forks](https://img.shields.io/github/forks/whotfusests/bfthon?style=social)
 ![GitHub stars](https://img.shields.io/github/stars/whotfusests/bfthon?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/whotfusests/bfthon?style=social)
@@ -12,7 +12,7 @@ Encryption module for Python with /x64/ like encrypt lines and complete gibberis
 
 1.Using PIP
 ```bash
-pip install https://github.com/whotfusests/xnum/archive/main.zip
+pip install https://github.com/whotfusests/xnum/tarball/main
 ```
 
 2.Visual Installer (Requires Administrator) 
