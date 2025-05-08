@@ -15,7 +15,7 @@ Encryption module for Python with 4 different cipher modes.
 pip install https://github.com/whotfusests/xnum/tarball/main
 ```
 
-2.Visual Installer (Requires Administrator) 
+2.Visual Installer (Requires Administrator)      
 ![Installer](https://img.shields.io/github/v/release/whotfusests/xnum?&logo=github&logoColor=white)
 
 ## Usage 📀
