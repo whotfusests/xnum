@@ -50,6 +50,13 @@ import xnum
 enc = xnum.encrypt("Hello!", "yourkeyfile.key", "mathsense")
 print(enc)
 # Output: ⊣⊡⍪⊵⊋≷
+# ---------------------------------------
+# NumCrap Mode
+import xnum
+
+enc = xnum.encrypt("Hello!", "yourkeyfile.key", "numcrap")
+print(enc)
+# Output: ⅊₄ℏ⑿1⁚
 ```
 
 3.decrypt (Decrypt a string)
@@ -72,6 +79,13 @@ print(dec)
 import xnum
 
 dec = xnum.decrypt("⊣⊡⍪⊵⊋≷", "yourkeyfile.key", "mathsense")
+print(dec)
+# Output: Hello!
+# ---------------------------------------
+# NumCrap Mode
+import xnum
+
+dec = xnum.decrypt("⅊₄ℏ⑿1⁚", "yourkeyfile.key", "numcrap")
 print(dec)
 # Output: Hello!
 ```
