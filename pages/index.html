@@ -259,9 +259,15 @@
                 <div class="tab-pane fade show active" id="genkey">
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
-                        <pre><code>import xnum
+                        <pre><code># Saved in file
+                            import xnum
                         
-xnum.genkey("yourkeyfile.key")</code></pre>
+xnum.genkey("yourkeyfile.key")
+# ---------------------------------------
+# Printable
+                        import xnum
+                        
+xnum.genkey("$printable")</code></pre>
                     </div>
                 </div>
 
@@ -270,16 +276,16 @@ xnum.genkey("yourkeyfile.key")</code></pre>
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
                         <pre><code># XSLASH Mode
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "xslash")
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "xslash")
 
 # GibberCipher Mode
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "gibbercipher")
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "gibbercipher")
 
 # MathSense Mode
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "mathsense")
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "mathsense")
 
 # NumCrap Mode
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "numcrap")</code></pre>
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "numcrap")</code></pre>
                     </div>
                 </div>
 
@@ -288,16 +294,16 @@ enc = xnum.encrypt("Hello!", "yourkeyfile.key", "numcrap")</code></pre>
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
                         <pre><code># XSLASH Mode
-dec = xnum.decrypt("/x98/x80/x8b/x27/xf9/x66", "yourkeyfile.key", "xslash")
+dec = xnum.decrypt("/x98/x80/x8b/x27/xf9/x66", "yourkeyfile.key/keytoken", "xslash")
 
 # GibberCipher Mode
-dec = xnum.decrypt("w9J∭Ei", "yourkeyfile.key", "gibbercipher")
+dec = xnum.decrypt("w9J∭Ei", "yourkeyfile.key/keytoken", "gibbercipher")
 
 # MathSense Mode
-dec = xnum.decrypt("⊣⊡⍪⊵⊋≷", "yourkeyfile.key", "mathsense")
+dec = xnum.decrypt("⊣⊡⍪⊵⊋≷", "yourkeyfile.key/keytoken", "mathsense")
 
 # NumCrap Mode
-dec = xnum.decrypt("₄ℏ⑿1⁚", "yourkeyfile.key", "numcrap")</code></pre>
+dec = xnum.decrypt("₄ℏ⑿1⁚", "yourkeyfile.key/keytoken", "numcrap")</code></pre>
                     </div>
                 </div>
             </div>
@@ -307,7 +313,7 @@ dec = xnum.decrypt("₄ℏ⑿1⁚", "yourkeyfile.key", "numcrap")</code></pre>
         <section class="credits-section text-center">
             <h3 class="mb-3"><i class="fas fa-heart me-2"></i>Credits <i class="fas fa-heart me-2"></i></h3>
             <p class="mb-0">Made with ❤️ by whotfusests</p>
-            <p class="mb-0">Version 4.0 | © 2025 MIT License</p>
+            <p class="mb-0">Version 5.0 | © 2025 MIT License</p>
         </section>
     </main>
 
