@@ -107,6 +107,13 @@ order allow,deny
 deny from all
 </Files>
 
+//Prevent viewing of .htpasswd file
+<Files .htpasswd>
+order allow,deny
+deny from all
+</Files>
+
+
 //Prevent directory listings
 Options All -Indexes
  
