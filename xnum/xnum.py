@@ -2,7 +2,7 @@ import os
 import sys
 from random import Random
 
-ARITHMETIC_SYMBOLS = [
+arithmetic_symbols = [
     '+', '-', '×', '÷', 'π', '√', '∆', '=', '%', '∗', '∝', '∞', '∫', '∬',
     '∮', '∴', '∵', '∼', '≅', '≈', '≠', '≡', '≤', '≥', '≪', '≫', '⊕', '⊗',
     '⊥', '⊤', '∂', '∇', '∃', '∀', '∅', '∈', '∉', '∋', '∌', '∎', '∘', '∙',
@@ -31,7 +31,7 @@ ARITHMETIC_SYMBOLS = [
     '⋸', '⋹', '⋺', '⋻', '⋼', '⋽', '⋾', '⋿'
 ]
 
-NUMBER_SYMBOLS = [
+number_symbols = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     '²', '³', '¹', '⁰', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹',
     '½', '⅓', '⅔', '¼', '¾', '⅛', '⅜', '⅝', '⅞', '⅕',
@@ -49,7 +49,7 @@ NUMBER_SYMBOLS = [
     '₪', '₫', '€', '₭', '₮', '₯', '₰', '₱', '₲', '₳',
     '₴', '₵', '₶', '₷', '₸', '₹', '₺', '₻', '₼', '₽',
     '₾', '₿', '℀', '℁', 'ℂ', '℃', '℄', '℅', '℆', 'ℇ',
-    '℈', '℉', 'ℊ', 'ℋ', 'ℌ', 'ℍ', 'ℎ', 'ℏ', 'ℐ', 'ℑ',
+    '℈', '℉', 'ℊ', 'ℋ', 'ℌ', 'ℍ', 'ℎ', 'ℏ', 'ℐ'ℐ', 'ℑ',
     'ℒ', 'ℓ', '℔', 'ℕ', '№', '℗', '℘', 'ℙ', 'ℚ', 'ℛ',
     'ℜ', 'ℝ', '℞', '℟', '℠', '℡', '™', '℣', 'ℤ', '℥',
     'Ω', '℧', 'ℨ', '℩', 'K', 'Å', 'ℬ', 'ℭ', '℮', 'ℯ',
@@ -61,8 +61,9 @@ NUMBER_SYMBOLS = [
     'Ↄ', 'ↄ', 'ↅ', 'ↆ', 'ↇ', 'ↈ', '↉'
 ]
 
+VALID_MODES = ("xslash", "gibbercipher", "mathsense", "numcrap")
 DEFAULT_MODE = "xslash"
-VALID_MODES = ("xslash", "gibbercipher", "mathsense","numcrap")
+__version__ = "5.0"
 
 def _get_gibberish_chars():
     chars = []
@@ -71,24 +72,33 @@ def _get_gibberish_chars():
     chars.extend(chr(i) for i in range(0x2200, 0x2200 + 66))  
     return chars[:256]
 
-def mode(new_mode):
-    global DEFAULT_MODE
-    if new_mode not in VALID_MODES:
-        raise ValueError(f"Invalid mode. Choose from {VALID_MODES}.")
-    DEFAULT_MODE = new_mode
+def _parse_key_input(key_input):
+    if isinstance(key_input, str) and len(key_input) == 64:
+        try:
+            return bytes.fromhex(key_input)
+        except ValueError:
+            pass
+    
+    try:
+        with open(key_input, 'rb') as f:
+            key = f.read()
+        if len(key) != 32:
+            raise ValueError("Invalid key length - must be 32 bytes.")
+        return key
+    except Exception as e:
+        raise ValueError(f"Invalid key input: {str(e)}.")
 
 def genkey(keyfile):
     if keyfile == "$printable":
         key = os.urandom(32)
-        print(f"Your key: {key.hex()}")
+        print(f"Your Key: {key.hex()}")
         return
     
     dir_path = os.path.dirname(keyfile)
-    if dir_path: 
-        os.makedirs(dir_path, exist_ok=True)
+    if dir_path: os.makedirs(dir_path, exist_ok=True)
     
     if os.path.exists(keyfile):
-        raise FileExistsError(f"Key file {keyfile} exists.")
+        raise FileExistsError(f"Key file {keyfile} already exists.")
     
     key = os.urandom(32)
     with open(keyfile, 'wb') as f:
@@ -96,7 +106,13 @@ def genkey(keyfile):
     
     if os.path.getsize(keyfile) != 32:
         os.remove(keyfile)
-        raise ValueError("Invalid key size.")
+        raise ValueError("Failed to generate valid 32-byte key.")
+
+def encrypt(text, key_input, mode=DEFAULT_MODE):
+    key = _parse_key_input(key_input)
+    
+    if mode not in VALID_MODES:
+        raise ValueError(f"Invalid mode: {mode}. Valid: {VALID_MODES}.")
     
     data = text.encode('utf-8')
     encrypted = bytes([data[i] ^ key[i % 32] for i in range(len(data))])
@@ -108,30 +124,20 @@ def genkey(keyfile):
     rng = Random(seed)
     
     if mode == "gibbercipher":
-        chars = _get_gibberish_chars()
-        rng.shuffle(chars)
-        return ''.join([chars[b] for b in encrypted])
-    
-    if mode == "mathsense":
+        symbols = _get_gibberish_chars()
+    elif mode == "mathsense":
         symbols = ARITHMETIC_SYMBOLS.copy()
-        rng.shuffle(symbols)
-        return ''.join([symbols[b] for b in encrypted])
-    
-    if mode == "numcrap":
+    elif mode == "numcrap":
         symbols = NUMBER_SYMBOLS.copy()
-        rng.shuffle(symbols)
-        return ''.join([symbols[b] for b in encrypted])
+    
+    rng.shuffle(symbols)
+    return ''.join([symbols[b] for b in encrypted])
 
-def decrypt(cipher, keyfile, mode=None):
-    mode = mode or DEFAULT_MODE
+def decrypt(cipher, key_input, mode=DEFAULT_MODE):
+    key = _parse_key_input(key_input)
+    
     if mode not in VALID_MODES:
-        raise ValueError(f"Invalid mode: {mode}")
-    
-    with open(keyfile, 'rb') as f:
-        key = f.read()
-    
-    if len(key) != 32:
-        raise ValueError("Invalid key length - must be 32 bytes")
+        raise ValueError(f"Invalid mode: {mode}. Valid: {VALID_MODES}.")
     
     if mode == "xslash":
         parts = cipher.split('/x')[1:]
@@ -141,40 +147,41 @@ def decrypt(cipher, keyfile, mode=None):
         rng = Random(seed)
         
         if mode == "gibbercipher":
-            chars = _get_gibberish_chars()
-            rng.shuffle(chars)
-            char_map = {c:i for i,c in enumerate(chars)}
+            symbols = _get_gibberish_chars()
         elif mode == "mathsense":
             symbols = ARITHMETIC_SYMBOLS.copy()
-            rng.shuffle(symbols)
-            char_map = {c:i for i,c in enumerate(symbols)}
         elif mode == "numcrap":
             symbols = NUMBER_SYMBOLS.copy()
-            rng.shuffle(symbols)
-            char_map = {c:i for i,c in enumerate(symbols)}
+        
+        rng.shuffle(symbols)
+        symbol_map = {char: idx for idx, char in enumerate(symbols)}
         
         try:
-            data = bytes([char_map[c] for c in cipher])
+            data = bytes([symbol_map[c] for c in cipher])
         except KeyError as e:
-            raise ValueError(f"Invalid {mode} character: {e.args[0]}")
+            raise ValueError(f"Invalid {mode} character: {e.args[0]}.")
 
     decrypted = bytes([data[i] ^ key[i % 32] for i in range(len(data))])
     return decrypted.decode('utf-8')
 
 def version():
     print(f"""
-XNUM Cipher v{__version__}
-OS: {os.name}
+XNUM Cipher Module v{__version__}
+Platform: {os.name}
 Python: {sys.version.split()[0]}
-Key Size: 32 bytes
-Modes: {', '.join(VALID_MODES)}
+Key Format: 32-byte hex or key file.
+Valid Modes: {', '.join(VALID_MODES)}
 """)
 
 def credits():
     print("""
-Published by: whotfusests
+Developer: whotfusests
 
 Repository: https://github.com/whotfusests/xnum
 """)
 
-__version__ = "4.0"
+def set_default_mode(mode):
+    global DEFAULT_MODE
+    if mode not in VALID_MODES:
+        raise ValueError(f"Invalid mode: {mode}.")
+    DEFAULT_MODE = mode
