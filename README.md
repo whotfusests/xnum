@@ -40,28 +40,28 @@ xnum.genkey("$printable")
 # XSLASH Mode
 import xnum
 
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "xslash")
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "xslash")
 print(enc)
 # Output: /x98/x80/x8b/x27/xf9/x66
 # ---------------------------------------
 # GibberCipher Mode
 import xnum
 
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "gibbercipher")
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "gibbercipher")
 print(enc)
 # Output: w9J∭Ei
 # ---------------------------------------
 # MathSense Mode
 import xnum
 
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "mathsense")
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "mathsense")
 print(enc)
 # Output: ⊣⊡⍪⊵⊋≷
 # ---------------------------------------
 # NumCrap Mode
 import xnum
 
-enc = xnum.encrypt("Hello!", "yourkeyfile.key", "numcrap")
+enc = xnum.encrypt("Hello!", "yourkeyfile.key/keytoken", "numcrap")
 print(enc)
 # Output: ⅊₄ℏ⑿1⁚
 ```
@@ -71,28 +71,28 @@ print(enc)
 # XSLASH Mode
 import xnum
 
-dec = xnum.decrypt("/x98/x80/x8b/x27/xf9/x66", "yourkeyfile.key", "xslash")
+dec = xnum.decrypt("/x98/x80/x8b/x27/xf9/x66", "yourkeyfile.key/keytoken", "xslash")
 print(dec)
 # Output: Hello!
 # ---------------------------------------
 # GibberCipher Mode
 import xnum
 
-dec = xnum.decrypt("w9J∭Ei", "yourkeyfile.key", "gibbercipher")
+dec = xnum.decrypt("w9J∭Ei", "yourkeyfile.key/keytoken", "gibbercipher")
 print(dec)
 # Output: Hello!
 # ---------------------------------------
 # MathSense Mode
 import xnum
 
-dec = xnum.decrypt("⊣⊡⍪⊵⊋≷", "yourkeyfile.key", "mathsense")
+dec = xnum.decrypt("⊣⊡⍪⊵⊋≷", "yourkeyfile.key/keytoken", "mathsense")
 print(dec)
 # Output: Hello!
 # ---------------------------------------
 # NumCrap Mode
 import xnum
 
-dec = xnum.decrypt("⅊₄ℏ⑿1⁚", "yourkeyfile.key", "numcrap")
+dec = xnum.decrypt("⅊₄ℏ⑿1⁚", "yourkeyfile.key/keytoken", "numcrap")
 print(dec)
 # Output: Hello!
 ```
