@@ -22,10 +22,17 @@ pip install https://github.com/whotfusests/xnum/tarball/main
 
 1.genkey (Generate a key)
 ```py
+# Saved in file
 import xnum
 
 xnum.genkey("yourkeyfile.key") # Use .key extension.
 # Output in keyfile: V@��i4<u�p���^U��Z^Qܢ0g����^N��V8�
+# ---------------------------------------
+# Printable
+import xnum
+
+xnum.genkey("$printable")
+# Output: V@��i4<u�p���^U��Z^Qܢ0g����^N��V8�
 ```
 
 2.encrypt (Encrypt a string)
