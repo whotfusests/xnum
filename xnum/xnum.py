@@ -2,7 +2,7 @@ import os
 import sys
 from random import Random
 
-ARITHMETIC_SYMBOLS = [
+arithmetic_symbols = [
     '+', '-', '×', '÷', 'π', '√', '∆', '=', '%', '∗', '∝', '∞', '∫', '∬',
     '∮', '∴', '∵', '∼', '≅', '≈', '≠', '≡', '≤', '≥', '≪', '≫', '⊕', '⊗',
     '⊥', '⊤', '∂', '∇', '∃', '∀', '∅', '∈', '∉', '∋', '∌', '∎', '∘', '∙',
@@ -31,7 +31,7 @@ ARITHMETIC_SYMBOLS = [
     '⋸', '⋹', '⋺', '⋻', '⋼', '⋽', '⋾', '⋿'
 ]
 
-NUMBER_SYMBOLS = [
+number_symbols = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     '²', '³', '¹', '⁰', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹',
     '½', '⅓', '⅔', '¼', '¾', '⅛', '⅜', '⅝', '⅞', '⅕',
@@ -61,10 +61,12 @@ NUMBER_SYMBOLS = [
     'Ↄ', 'ↄ', 'ↅ', 'ↆ', 'ↇ', 'ↈ', '↉'
 ]
 
-EMPTYSPACE_SYMBOLS = [
-    '\u0020', '\u00A0', '\u1680', '\u2000', '\u2001', '\u2002',
-    '\u2003', '\u2004', '\u2005', '\u2006', '\u2007', '\u2008',
-    '\u2009', '\u200A', '\u202F', '\u205F', '\u3000', '\uFEFF'
+EMPTYSPACE_BASE = [
+    '\u0020', '\u00A0', '\u1680', '\u2000', '\u2001', '\u2002', '\u2003',
+    '\u2004', '\u2005', '\u2006', '\u2007', '\u2008', '\u2009', '\u200A',
+    '\u202F', '\u205F', '\u3000', '\uFEFF', '\u200B', '\u200C', '\u200D',
+    '\u2060', '\u2061', '\u2062', '\u2063', '\u2064', '\u180E', '\u3164',
+    '\uFFA0', '\u2800', '\u1160', '\u034F', '\u2028', '\u2029'
 ]
 
 VALID_MODES = ("xslash", "gibbercipher", "mathsense", "numcrap", "emptyspace")
@@ -73,13 +75,19 @@ __version__ = "6.0"
 
 def _get_gibberish_chars():
     chars = []
-    chars.extend(chr(i) for i in range(32, 127))    
+    chars.extend(chr(i) for i in range(32, 127))   
     chars.extend(chr(i) for i in range(161, 256))
-    chars.extend(chr(i) for i in range(0x2200, 0x2200 + 66))
+    chars.extend(chr(i) for i in range(0x2200, 0x2200 + 66)) 
     return chars[:256]
 
 def _get_emptyspace_chars():
-    return (EMPTYSPACE_SYMBOLS * 15)[:256]
+    sequences = []
+    for c1 in EMPTYSPACE_BASE:
+        for c2 in EMPTYSPACE_BASE:
+            sequences.append(c1 + c2)
+            if len(sequences) >= 256:
+                return sequences[:256]
+    raise ValueError("Insufficient base characters for emptyspace mode.")
 
 def _parse_key_input(key_input):
     if isinstance(key_input, str) and len(key_input) == 64:
@@ -125,22 +133,25 @@ def encrypt(text, key_input, mode=DEFAULT_MODE):
         raise ValueError(f"Invalid mode: {mode}. Valid: {VALID_MODES}")
     
     data = text.encode('utf-8')
-    encrypted = bytes([data[i] ^ key[i % 32] for i in range(len(data))])
+    encrypted = bytes([data[i] ^ key[i % 32] for i in range(len(data)))
     
     if mode == "xslash":
         return '/x'.join([''] + [f"{b:02x}" for b in encrypted])
     
-
     seed = int.from_bytes(key, 'big')
     rng = Random(seed)
+    
     if mode == "gibbercipher":
         symbols = _get_gibberish_chars()
     elif mode == "mathsense":
-        symbols = ARITHMETIC_SYMBOLS.copy()
+        symbols = arithmetic_symbols.copy()
     elif mode == "numcrap":
-        symbols = NUMBER_SYMBOLS.copy()
+        symbols = number_symbols.copy()
     elif mode == "emptyspace":
         symbols = _get_emptyspace_chars()
+    
+    if len(symbols) != 256:
+        raise ValueError(f"Symbol list for {mode} must contain 256 elements")
     
     rng.shuffle(symbols)
     return ''.join([symbols[b] for b in encrypted])
@@ -161,17 +172,25 @@ def decrypt(cipher, key_input, mode=DEFAULT_MODE):
         if mode == "gibbercipher":
             symbols = _get_gibberish_chars()
         elif mode == "mathsense":
-            symbols = ARITHMETIC_SYMBOLS.copy()
+            symbols = arithmetic_symbols.copy()
         elif mode == "numcrap":
-            symbols = NUMBER_SYMBOLS.copy()
+            symbols = number_symbols.copy()
         elif mode == "emptyspace":
             symbols = _get_emptyspace_chars()
+        
+        if len(symbols) != 256:
+            raise ValueError(f"Symbol list for {mode} must contain 256 elements")
         
         rng.shuffle(symbols)
         symbol_map = {char: idx for idx, char in enumerate(symbols)}
         
         try:
-            data = bytes([symbol_map[c] for c in cipher])
+            if mode == "emptyspace":
+                if len(cipher) % 2 != 0:
+                    raise ValueError("Invalid emptyspace ciphertext length")
+                data = bytes([symbol_map[cipher[i:i+2]] for i in range(0, len(cipher), 2))
+            else:
+                data = bytes([symbol_map[c] for c in cipher])
         except KeyError as e:
             raise ValueError(f"Invalid {mode} character: {e.args[0]}")
 
@@ -199,3 +218,5 @@ def set_default_mode(mode):
     if mode not in VALID_MODES:
         raise ValueError(f"Invalid mode: {mode}.")
     DEFAULT_MODE = mode
+
+__all__ = ['genkey', 'encrypt', 'decrypt', 'version', 'credits', 'set_default_mode']
