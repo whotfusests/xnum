@@ -7,7 +7,7 @@ setup(
     name="xnum",
     version="6.0",
     author="whotfusests",
-    description="Encryption module for Python with 4 diffrent cipher modes.",
+    description="Encryption module for Python with 5 diffrent cipher modes.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/whotfusests/xnum",
