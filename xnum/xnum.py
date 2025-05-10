@@ -132,7 +132,7 @@ def encrypt(text, key_input, mode=DEFAULT_MODE):
     
 
     seed = int.from_bytes(key, 'big')
-    rng = Random(seed
+    rng = Random(seed)
     if mode == "gibbercipher":
         symbols = _get_gibberish_chars()
     elif mode == "mathsense":
