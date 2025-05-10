@@ -133,7 +133,7 @@ def encrypt(text, key_input, mode=DEFAULT_MODE):
         raise ValueError(f"Invalid mode: {mode}. Valid: {VALID_MODES}")
     
     data = text.encode('utf-8')
-    encrypted = bytes([data[i] ^ key[i % 32] for i in range(len(data)))
+    data = bytes([symbol_map[cipher[i:i+2]] for i in range(0, len(cipher), 2)]
     
     if mode == "xslash":
         return '/x'.join([''] + [f"{b:02x}" for b in encrypted])
@@ -188,7 +188,7 @@ def decrypt(cipher, key_input, mode=DEFAULT_MODE):
             if mode == "emptyspace":
                 if len(cipher) % 2 != 0:
                     raise ValueError("Invalid emptyspace ciphertext length")
-                data = bytes([symbol_map[cipher[i:i+2]] for i in range(0, len(cipher), 2))
+                data = bytes([symbol_map[cipher[i:i+2]] for i in range(0, len(cipher), 2)])
             else:
                 data = bytes([symbol_map[c] for c in cipher])
         except KeyError as e:
