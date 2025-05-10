@@ -4,7 +4,7 @@ Encryption module for Python with 4 different cipher modes.
 ![GitHub forks](https://img.shields.io/github/forks/whotfusests/bfthon?style=social)
 ![GitHub stars](https://img.shields.io/github/stars/whotfusests/bfthon?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/whotfusests/bfthon?style=social)
-![Version](https://img.shields.io/badge/Version-2.0-233572A5?&logo=github&logoColor=white)
+![Version](https://img.shields.io/badge/Version-6.0-233572A5?&logo=github&logoColor=white)
 [![Made with](https://img.shields.io/badge/language-Python-%233572A5?logo=python&logoColor=white)](https://www.python.org/)
 
 
