@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="xnum",
-    version="5.0",
+    version="6.0",
     author="whotfusests",
     description="Encryption module for Python with 4 diffrent cipher modes.",
     long_description=long_description,
