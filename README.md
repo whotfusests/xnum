@@ -1,6 +1,6 @@
 # xnum 🔐
 
-Encryption module for Python with 4 different cipher modes.    
+Encryption module for Python with 5 different cipher modes.    
 ![GitHub forks](https://img.shields.io/github/forks/whotfusests/bfthon?style=social)
 ![GitHub stars](https://img.shields.io/github/stars/whotfusests/bfthon?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/whotfusests/bfthon?style=social)
