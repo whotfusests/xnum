@@ -61,9 +61,15 @@ number_symbols = [
     'Ↄ', 'ↄ', 'ↅ', 'ↆ', 'ↇ', 'ↈ', '↉'
 ]
 
-VALID_MODES = ("xslash", "gibbercipher", "mathsense", "numcrap")
+EMPTYSPACE_SYMBOLS = [
+    '\u0020', '\u00A0', '\u1680', '\u2000', '\u2001', '\u2002', 
+    '\u2003', '\u2004', '\u2005', '\u2006', '\u2007', '\u2008', 
+    '\u2009', '\u200A', '\u202F', '\u205F', '\u3000', '\uFEFF',
+] * 15
+
+VALID_MODES = ("xslash", "gibbercipher", "mathsense", "numcrap", " emptyspaces")
 DEFAULT_MODE = "xslash"
-__version__ = "5.0"
+__version__ = "6.0"
 
 def _get_gibberish_chars():
     chars = []
@@ -71,6 +77,14 @@ def _get_gibberish_chars():
     chars.extend(chr(i) for i in range(161, 256))   
     chars.extend(chr(i) for i in range(0x2200, 0x2200 + 66))  
     return chars[:256]
+
+def _get_emptyspace_chars():
+    spaces = [
+        '\u0020', '\u00A0', '\u1680', '\u2000', '\u2001', '\u2002',
+        '\u2003', '\u2004', '\u2005', '\u2006', '\u2007', '\u2008',
+        '\u2009', '\u200A', '\u202F', '\u205F', '\u3000', '\uFEFF'
+    ]
+    return (spaces * 15)[:256]
 
 def _parse_key_input(key_input):
     if isinstance(key_input, str) and len(key_input) == 64:
@@ -126,10 +140,12 @@ def encrypt(text, key_input, mode=DEFAULT_MODE):
     if mode == "gibbercipher":
         symbols = _get_gibberish_chars()
     elif mode == "mathsense":
-        symbols = ARITHMETIC_SYMBOLS.copy()
+        symbols = arithmetic_symbols.copy()
     elif mode == "numcrap":
-        symbols = NUMBER_SYMBOLS.copy()
-    
+        symbols = number_symbols.copy()
+    elif mode == "emptyspace":
+        symbols = _get_emptyspace_chars()
+        
     rng.shuffle(symbols)
     return ''.join([symbols[b] for b in encrypted])
 
@@ -149,11 +165,14 @@ def decrypt(cipher, key_input, mode=DEFAULT_MODE):
         if mode == "gibbercipher":
             symbols = _get_gibberish_chars()
         elif mode == "mathsense":
-            symbols = ARITHMETIC_SYMBOLS.copy()
+            symbols = arithmetic_symbols.copy()
         elif mode == "numcrap":
-            symbols = NUMBER_SYMBOLS.copy()
-        
+            symbols = number_symbols.copy()
+        elif mode == "emptyspace":
+        symbols = _get_emptyspace_chars()
         rng.shuffle(symbols)
+        char_map = {c:i for i,c in enumerate(symbols)}
+        rng.shuffle(symbols) 
         symbol_map = {char: idx for idx, char in enumerate(symbols)}
         
         try:

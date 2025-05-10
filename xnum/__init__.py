@@ -7,5 +7,5 @@ from .xnum import (
     credits
 )
 
-__version__ = "5.0"
+__version__ = "6.0"
 __all__ = ['mode', 'genkey', 'encrypt', 'decrypt', 'version', 'credits']
